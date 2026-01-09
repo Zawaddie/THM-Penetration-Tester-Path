@@ -9,9 +9,9 @@ THM Penetration Tester Path:
 
 A. Jr. Penetration Tester 
 => Introduction  to Cyber Security
-  1. Offensive Security Intro
-  2. Defensive Security Intro
-  2. Careers in Cyber
+  1. Offensive Security Intro  ✅
+  2. Defensive Security Intro  ✅
+  2. Careers in Cyber          ✅
 
 => Introduction to PenTesting
    1. Pentesting Fundamentals
