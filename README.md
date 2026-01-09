@@ -1,2 +1,88 @@
 # THM-Penetration-Tester-Path
 This repository documents my journey through the TryHackMe's Penetration Tester path, featuring structured writeups, attack methodologies, tool usage, and key security concepts across offensive security fundamentals.
+
+I organized this Repo to help me track my learning consisteny in path.
+
+---
+
+THM Penetration Tester Path:
+
+A. Jr. Penetration Tester 
+=> Introduction  to Cyber Security
+  1. Offensive Security Intro
+  2. Defensive Security Intro
+  2. Careers in Cyber
+
+=> Introduction to PenTesting
+   1. Pentesting Fundamentals
+   2. Principles of Security
+   
+=> Introduction To Web Hacking
+   1. Walking an Application
+   2. Content Discovery
+   3. Subdomain Enumeration
+   4. Authentication Bypass
+   5.IDOR
+   6. File inclusion
+   7. Intro to SSRF
+   8. Intro to Cross-site Scripting
+   9. Race Conditions
+   10. Command Injection
+   11. SQL Injection
+
+=> Burp Suite
+   1. Burp Suite: The Basics
+   2. Burp Suite: Repeater
+   3. Burp Suite: Intruder
+   4. Burp Suite: Other Modules
+   5. Burp Suite: Extensions
+
+=> Network Security
+   1. Passive Reconnaissance
+   2. Active Reconnaissance
+   4. Nmap Live Host Discovery
+   5. Nmap Basic Port Scans
+   6. Nmap Advanced Port Scans
+   7. Nmap Post Port Scans
+   8. Protocols and servers
+   9. Protocols and servers 2
+  10. Net Sec Challenge
+
+=> Vulnerability Research
+   1. Vulnerabilities 101
+   2. Exploit Vulnerabilities
+   3. Vulnerability Capstone
+
+=> Metasploit
+   1. Metasploit: Introduction
+   2. Metasploit: Exploitation
+   3. Metasploit: Meterpreter
+
+=> Privilege Escalation
+   1. What the shell?
+   2. Linux Privilege Escalation
+   3. Window Privilege Escalation 
+
+
+
+
+
+B. Jr. Penetration Tester (PT1)==> professional certification
+
+
+
+C. Web Fundamental
+
+
+
+D. Web Application Pentesting
+
+
+E.Web Application Red Teaming.
+
+
+
+E. Red Teaming
+
+
+
