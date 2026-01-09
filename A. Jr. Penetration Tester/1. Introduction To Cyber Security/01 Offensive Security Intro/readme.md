@@ -13,9 +13,7 @@ The goal is to understand hacker tactics and enhance our system defences because
 - Discover hidden pages and exploit an exposed bank transfer function
 - Use **Gobuster** to enumerate hidden directories on the FakeBank website and exploit an exposed admin-style functionality to perform an unauthorized bank transfer.
 
----
-
-##  Tools & Environment
+**Tools & Environment:**
 
 * **Gobuster** – Directory brute-forcing tool
 * **Terminal (Command Line)**
@@ -23,24 +21,19 @@ The goal is to understand hacker tactics and enhance our system defences because
 * **Target URL:** `http://fakebank.thm`
 * **Wordlist:** `wordlist.txt`
 
----
 
-## Background
+**Background**
 
 Many web applications expose sensitive endpoints due to misconfiguration or human error. 
 Admin portals, debug pages, or internal tools may be left publicly accessible, allowing attackers to discover and abuse them.
 
----
+**Attack Walkthrough***
 
-##  Attack Walkthrough
-
-### Step 1: Open the Terminal
+**Step 1: Open the Terminal**
 
 Launch the terminal on the TryHackMe machine to interact with the system using command-line tools.
 
----
-
-### Step 2: Directory Enumeration with Gobuster
+**=>Directory Enumeration with Gobuster**
 
 Run Gobuster to brute-force hidden directories and pages on the FakeBank website:
 
@@ -48,15 +41,12 @@ Run Gobuster to brute-force hidden directories and pages on the FakeBank website
 gobuster -u http://fakebank.thm -w wordlist.txt dir
 ```
 
-#### Command Breakdown
-
 * `-u` → Target URL
 * `-w` → Wordlist used for brute-forcing
 * `dir` → Directory enumeration mode
 
----
 
-### 📊 Gobuster Output
+**=>Gobuster Output**
 
 ```text
 =====================================================
@@ -73,13 +63,12 @@ Gobuster v2.0.1
 =====================================================
 ```
 
-**Key Finding:**
+**=>Key Finding:**
 
 * `/bank-transfer` → Accessible page returning **HTTP 200**
 
----
 
-### Step 3: Exploitation: Unauthorized Bank Transfer
+**Step 3: Exploitation: Unauthorized Bank Transfer**
 
 The `/bank-transfer` endpoint exposes a functionality that allows money transfers **without authentication**.
 
@@ -95,16 +84,12 @@ The `/bank-transfer` endpoint exposes a functionality that allows money transfer
 3. Submit the transaction.
 4. Refresh our account page to confirm the updated balance.
 
----
-
-##  Result
+**Result**
 
 * Successfully transferred funds without authentication
 * Demonstrates **Broken Access Control** and **Sensitive Function Exposure**
 
----
-
-## 🔐 Security Impact
+**Security Impact**
 
 This vulnerability allows:
 
@@ -112,11 +97,7 @@ This vulnerability allows:
 * Account manipulation
 * Financial fraud
 
-As ethical hackers, such findings should be responsibly disclosed so organizations can secure exposed endpoints.
-
----
-
-## 📌 Key Takeaways
+** Key Takeaways
 
 * Directory enumeration is a critical first step in web attacks
 * Sensitive endpoints must be protected with authentication & authorization
@@ -124,23 +105,5 @@ As ethical hackers, such findings should be responsibly disclosed so organizatio
 
 ---
 
-## 📚 Related Concepts
+## Task 3: Careers in Cyber Security.
 
-* Directory Brute-Forcing
-* Broken Access Control
-* OWASP Top 10 – A01:2021
-
----
-
-✅ **Room Completed Successfully**
-
----
-
-If you want, I can:
-
-* Standardize this to match **all your THM repos**
-* Add **screenshots placeholders**
-* Create a **repo description + tags**
-* Convert it into your **personal THM README template**
-
-Just say the word.
