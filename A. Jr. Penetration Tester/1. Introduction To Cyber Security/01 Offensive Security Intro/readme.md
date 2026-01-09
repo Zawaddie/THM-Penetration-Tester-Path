@@ -1,4 +1,4 @@
-# Introduction To Cyber Security
+# Offensive Security Intro
 
 ## Task 1: What is Offensive Security?
 
@@ -107,3 +107,11 @@ This vulnerability allows:
 
 ## Task 3: Careers in Cyber Security.
 
+- Ethical hackers (security consultants) 
+- Defenders (security analysts fighting cybercrime)
+
+ A few offensive security roles:
+
+**Penetration Tester** - Responsible for testing technology products for finding exploitable security vulnerabilities.
+**Red Teamer** - Plays the role of an adversary, attacking an organization and providing feedback from an enemy's perspective.
+**Security Engineer** - Design, monitor, and maintain security controls, networks, and systems to help prevent cyberattacks.
