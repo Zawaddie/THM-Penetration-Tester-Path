@@ -97,7 +97,7 @@ This vulnerability allows:
 * Account manipulation
 * Financial fraud
 
-** Key Takeaways
+**Key Takeaways**
 
 * Directory enumeration is a critical first step in web attacks
 * Sensitive endpoints must be protected with authentication & authorization
@@ -112,6 +112,9 @@ This vulnerability allows:
 
  A few offensive security roles:
 
-**Penetration Tester** - Responsible for testing technology products for finding exploitable security vulnerabilities.
-**Red Teamer** - Plays the role of an adversary, attacking an organization and providing feedback from an enemy's perspective.
-**Security Engineer** - Design, monitor, and maintain security controls, networks, and systems to help prevent cyberattacks.
+* **Penetration Tester** - Responsible for testing technology products for finding exploitable security vulnerabilities.
+
+* **Red Teamer** - Plays the role of an adversary, attacking an organization and providing feedback from an enemy's perspective.
+
+* **Security Engineer** - Design, monitor, and maintain security controls, networks, and systems to help prevent cyberattacks.
+
