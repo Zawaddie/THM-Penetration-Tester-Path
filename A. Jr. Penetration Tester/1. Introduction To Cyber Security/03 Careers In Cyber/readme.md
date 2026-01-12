@@ -71,7 +71,6 @@ This job role requires imitating cyber criminals' actions, emulating malicious a
 
 Red team assessments can run for up to a month, typically by a team external to the company. They are often best suited to organisations with mature security programs in place.
 
-
 --- 
 
 ## Quiz
@@ -79,3 +78,4 @@ Red team assessments can run for up to a month, typically by a team external to 
 The quiz was designed to help me find a suitable career role from five roles after answering the questions in the quiz.
 
 <img width="685" height="666" alt="image" src="https://github.com/user-attachments/assets/243f0b6b-5458-41f6-be15-441f02471d76" />
+
