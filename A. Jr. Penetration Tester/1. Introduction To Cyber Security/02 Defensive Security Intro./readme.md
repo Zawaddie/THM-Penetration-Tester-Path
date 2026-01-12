@@ -66,6 +66,7 @@ Different organizations face different adversaries, such as:
 2. **Processing**
    Raw data is cleaned, normalized, and structured for analysis.
 
+
 3. **Analysis**
    Analysts identify:
 
@@ -171,4 +172,5 @@ Following the step-by-step instructions provided within the simulation to naviga
 We can also make the Internet safer by reporting the malicious IPs, for example, on AbuseIPDB.
 
 <img width="685" height="343" alt="image" src="https://github.com/user-attachments/assets/5ffddb11-9910-41fd-83dd-59c0e2375908" />
+
 
