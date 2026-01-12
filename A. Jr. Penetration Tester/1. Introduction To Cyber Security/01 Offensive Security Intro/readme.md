@@ -33,7 +33,7 @@ Admin portals, debug pages, or internal tools may be left publicly accessible, a
 
 Launch the terminal on the TryHackMe machine to interact with the system using command-line tools.
 
-**=>Directory Enumeration with Gobuster**
+**=> Directory Enumeration with Gobuster**
 
 Run Gobuster to brute-force hidden directories and pages on the FakeBank website:
 
@@ -46,7 +46,7 @@ gobuster -u http://fakebank.thm -w wordlist.txt dir
 * `dir` → Directory enumeration mode
 
 
-**=>Gobuster Output**
+**=> Gobuster Output**
 
 ```text
 =====================================================
@@ -117,4 +117,5 @@ This vulnerability allows:
 * **Red Teamer** - Plays the role of an adversary, attacking an organization and providing feedback from an enemy's perspective.
 
 * **Security Engineer** - Design, monitor, and maintain security controls, networks, and systems to help prevent cyberattacks.
+
 
