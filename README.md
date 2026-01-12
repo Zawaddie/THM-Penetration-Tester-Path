@@ -8,16 +8,17 @@ I organized this Repo to help me track my learning consisteny in path.
 THM Penetration Tester Path:
 
 A. Jr. Penetration Tester 
-=> Introduction  to Cyber Security
+
+=> MODULE 1: Introduction  to Cyber Security
   1. Offensive Security Intro  ✅
   2. Defensive Security Intro  ✅
   2. Careers in Cyber          ✅
 
-=> Introduction to PenTesting
+=> MODULE 2: Introduction to PenTesting
    1. Pentesting Fundamentals
    2. Principles of Security
    
-=> Introduction To Web Hacking
+=> MODULE 3: Introduction To Web Hacking
    1. Walking an Application
    2. Content Discovery
    3. Subdomain Enumeration
@@ -30,14 +31,14 @@ A. Jr. Penetration Tester
    10. Command Injection
    11. SQL Injection
 
-=> Burp Suite
+=> MODULE 3: Burp Suite
    1. Burp Suite: The Basics
    2. Burp Suite: Repeater
    3. Burp Suite: Intruder
    4. Burp Suite: Other Modules
    5. Burp Suite: Extensions
 
-=> Network Security
+=> MODULE 4: Network Security
    1. Passive Reconnaissance
    2. Active Reconnaissance
    4. Nmap Live Host Discovery
@@ -48,17 +49,17 @@ A. Jr. Penetration Tester
    9. Protocols and servers 2
   10. Net Sec Challenge
 
-=> Vulnerability Research
+=> MODULE 4: Vulnerability Research
    1. Vulnerabilities 101
    2. Exploit Vulnerabilities
    3. Vulnerability Capstone
 
-=> Metasploit
+=> MODULE 5: Metasploit
    1. Metasploit: Introduction
    2. Metasploit: Exploitation
    3. Metasploit: Meterpreter
 
-=> Privilege Escalation
+=> MODULE 6: Privilege Escalation
    1. What the shell?
    2. Linux Privilege Escalation
    3. Window Privilege Escalation 
@@ -66,8 +67,7 @@ A. Jr. Penetration Tester
 
 
 
-
-B. Jr. Penetration Tester (PT1)==> professional certification
+B. Jr. Penetration Tester (PT1): A professional certification
 
 
 
@@ -78,7 +78,7 @@ C. Web Fundamental
 D. Web Application Pentesting
 
 
-E.Web Application Red Teaming.
+E. Web Application Red Teaming.
 
 
 
