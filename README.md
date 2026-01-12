@@ -28,7 +28,7 @@ The roadmap has 6 separate paths that I intend to walkthrough and document my jo
    2. Content Discovery
    3. Subdomain Enumeration
    4. Authentication Bypass
-   5.IDOR
+   5. IDOR
    6. File inclusion
    7. Intro to SSRF
    8. Intro to Cross-site Scripting
