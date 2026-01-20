@@ -4,24 +4,25 @@ In this module I was able to get hands-on, learn about and exploit some of the m
 
 I successfully completed the eleven rooms in the Module:
 
-   **1. Walking an Application**
+   **1. Walking an Application** (Premium)
    
-   **2. Content Discovery**
+   **2. Content Discovery** (Premium)
    
-   **3. Subdomain Enumeration**
+   **3. Subdomain Enumeration** (Premium)
    
-   **4. Authentication Bypass**
+   **4. Authentication Bypass** (Premium)
    
-   **5. IDOR**
+   **5. IDOR** (Premium)
    
-   **6. File inclusion**
+   **6. File inclusion** (Premium)
    
-   **7. Intro to SSRF**
+   **7. Intro to SSRF**  (Premium)
    
-   **8. Intro to Cross-site Scripting**
+   **8. Intro to Cross-site Scripting**  (Premium)
    
-   **9. Race Conditions**
+   **9. Race Conditions** (Premium)
    
-   **10. Command Injection**
+   **10. Command Injection** (Premium)
    
-   **11. SQL Injection**
+   **11. SQL Injection** (Free)
+
