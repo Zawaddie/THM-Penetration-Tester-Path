@@ -1,7 +1,7 @@
 # THM-Penetration-Tester-Path
 This repository documents my journey through the TryHackMe's Penetration Tester Roadmap, featuring structured writeups, attack methodologies, tool usage, and key security concepts across offensive security fundamentals.
 
-I organized this Repo to help me track my learning consisteny in path.
+I organized this Repo to help me track my learning consistency in path.
 
 ---
 
@@ -88,6 +88,65 @@ The roadmap has 6 separate paths that I intend to walkthrough and document my jo
 
 
 [PATH E. Red Teaming](https://github.com/Zawaddie/THM-Penetration-Tester-Path/tree/main/F.%20Red%20Teaming)
+
+
+
+---
+
+## 🧨 THM Junior Penetration Tester Status: COMPLETED TryHackMe Path
+
+Completed the **TryHackMe Junior Penetration Tester Path**, building a solid foundation in offensive security by simulating real-world attack scenarios across networks, web applications, and operating systems. This path focuses on **thinking like an attacker**, understanding how systems fail, and exploiting weaknesses safely and methodically.
+
+### 🔓 Core Competencies
+
+* **Reconnaissance & Enumeration**
+
+  * Perform passive and active reconnaissance against target systems
+  * Enumerate services, users, shares, and misconfigurations
+  * Identify attack surfaces using scanning and manual techniques
+
+* **Vulnerability Discovery**
+
+  * Detect common vulnerabilities such as weak authentication, misconfigurations, and outdated services
+  * Identify web application flaws including **IDOR, file inclusion, command injection, and XSS**
+  * Assess risk and exploitability within defined scopes
+
+* **Exploitation Techniques**
+
+  * Exploit vulnerable services and web applications to gain initial access
+  * Perform local privilege escalation on Linux and Windows systems
+  * Use public exploits responsibly and modify them when necessary
+
+* **Post-Exploitation**
+
+  * Maintain access and pivot within compromised environments
+  * Extract credentials and sensitive data
+  * Demonstrate impact while respecting engagement boundaries
+
+* **Reporting & Methodology**
+
+  * Follow structured penetration testing methodologies
+  * Clearly document findings, exploitation steps, and impact
+  * Provide actionable remediation recommendations
+
+### 🧠 Tester Mindset
+
+* Thinks offensively while respecting rules of engagement
+* Curious, methodical, and persistent during exploitation
+* Balances automation with manual testing
+* Focuses on **impact**, not just vulnerability counts
+
+### 🛠️ Tools & Technologies
+
+* Nmap, Gobuster, Hydra
+* Metasploit Framework
+* Burp Suite
+* Linux & Windows privilege escalation techniques
+* Basic scripting for automation
+
+### 📌 Outcome
+
+This path prepared me for entry-level **Penetration Tester / Red Team** roles by developing practical skills in reconnaissance, exploitation, and reporting, with a strong emphasis on real-world attack chains rather than isolated vulnerabilities.
 
 
 
