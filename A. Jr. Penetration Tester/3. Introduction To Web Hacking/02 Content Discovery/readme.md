@@ -41,10 +41,14 @@ There are three main ways of discovering content on a website:
       
 - **OSINT (Open-Source Intelligence):**
   - **Google Hacking / Dorking**: More information about google hacking can be found [here.](https://en.wikipedia.org/wiki/Google_hacking)
+    
+    <img width="607" height="302" alt="image" src="https://github.com/user-attachments/assets/b79d619b-6577-4dfa-926b-5715f1f6d59e" />
+
   - **Wappalyzer:** [wappalyzer](https://www.wappalyzer.com/) is an online tool and browser extension that helps identify what technologies a website uses, such as frameworks, Content Management Systems (CMS), payment processors and much more, and it can even find version numbers as well.
   - **Wayback Machine:** The [Wayback Machine](https://archive.org/web/) is a historical archive of websites that dates back to the late 90s. You can search a domain name, and it will show you all the times the service scraped the web page and saved the contents. This service can help uncover old pages that may still be active on the current website.
   - **GitHub**: You can use GitHub's search feature to look for company names or website names to try and locate repositories belonging to your target. Once discovered, you may have access to source code, passwords or other content that you hadn't yet found.
   - **AWS S3 Buckets:** S3 Buckets allows people to save files and even static website content in the cloud accessible over HTTP and HTTPS. The owner of the files can set access permissions to either make files public, private and even writable. Sometimes these access permissions are incorrectly set and inadvertently allow access to files that shouldn't be available to the public. The format of the S3 buckets is http(s)://{name}.s3.amazonaws.com where {name} is decided by the owner. S3 buckets can be discovered in many ways, such as finding the URLs in the website's page source, GitHub repositories, or even automating the process. One common automation method is by using the company name followed by common terms such as {name}-assets, {name}-www, {name}-public, {name}-private, etc.
+
 
 
 
