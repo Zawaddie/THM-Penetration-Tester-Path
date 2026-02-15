@@ -41,9 +41,10 @@ An example site review for the a website would look something like this:
 - Key Features:
   - **Inspector:**  provides the penetration Tester with a live representation of what is currently on the website.
   - **Debugger:** intended for debugging JavaScript code but it gives the penetration tester the option of digging deep into the JavaScript code. A feature of debugger called breakpoints are points in the code that we can force the browser to stop processing the JavaScript and pause the current execution.
-  - **Network:**
+  - **Network:** The network tab on the developer tools can be used to keep track of every external request a webpage makes. If you click on the Network tab and then refresh the page, you'll see all the files the page is requesting.  AJAX is a method for sending and receiving network data in a web application background without interfering by changing the current web page.
  
 **NOTE**:  Many times when viewing javascript files, you'll notice that everything is on one line, which is because it has been minimised, which means all formatting ( tabs, spacing and newlines ) have been removed to make the file smaller. This file is no exception to this, and it has also been obfusticated, which makes it purposely difficult to read, so it can't be copied as easily by other developers.
+
 
 
 
