@@ -68,7 +68,7 @@ Inspecteing the page, I notice I'm given user Id 50
 
 <img width="1360" height="673" alt="image" src="https://github.com/user-attachments/assets/2b68a331-5f24-4fdd-95f8-49a0fa950078" />
 
-Changing the user ID to 1 or 3, am able to view other users information.
+Changing the user ID to 1 or 3, Im able to view other users information.
 
 <img width="804" height="130" alt="image" src="https://github.com/user-attachments/assets/f7b0785f-5378-4f15-83f4-2a1728e6dc15" />
 
@@ -78,3 +78,4 @@ Changing the user ID to 1 or 3, am able to view other users information.
 **Found this useful**
 
 <img width="635" height="529" alt="image" src="https://github.com/user-attachments/assets/1e4b0017-ac04-412b-8403-02111e7ddf6e" />
+
