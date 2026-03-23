@@ -107,9 +107,9 @@ An attacker can bypass this by registering a subdomain on their own domain with 
 
 2. **Allow List**
 
-Where all requests get denied unless they appear on a list or match a particular pattern, such as a rule that an URL used in a parameter must begin with ```https://website.thm```. 
+Where all requests get denied unless they appear on a list or match a particular pattern, such as a rule that an URL used in a parameter must begin with https://website.thm. 
 
-An attacker could quickly circumvent this rule by creating a subdomain on an attacker's domain name, such as ```https://website.thm.attackers-domain.thm```. The application logic would now allow this input and let an attacker control the internal HTTP request.
+An attacker could quickly circumvent this rule by creating a subdomain on an attacker's domain name, such as https://website.thm.attackers-domain.thm. The application logic would now allow this input and let an attacker control the internal HTTP request.
 
 
 ### Open Redirect
@@ -132,6 +132,61 @@ Questions to answer:
 ## SSRF Practical
 
 **Fictional Scenario:**
+
+We've come across two new endpoints during a content discovery exercise against the Acme IT Support website: 
+- The first one is ```/private```, which gives us an error message explaining that the contents cannot be viewed from our IP address. 
+- The second is a new version of the customer account page at ```/customers/new-account-page``` with a new feature allowing customers to choose an avatar for their account.
+
+
+STEPS to obtain the Flag:
+1. We bBegin by clicking the Start Machine button to launch the Acme IT Support website.
+2. Once running, we visit it at the URL https://LAB_WEB_URL.p.thmlabs.com.
+3. Then, we create a customer account and sign in.
+
+<img width="1065" height="399" alt="image" src="https://github.com/user-attachments/assets/2e9ca206-be8f-4f71-90d2-8398db6db059" />
+
+5. Once signed in, we visit https://LAB_WEB_URL.p.thmlabs.com/customers/new-account-page to view the new avatar selection feature.
+
+<img width="763" height="583" alt="image" src="https://github.com/user-attachments/assets/fb3544b2-f22f-4496-88c4-a0a3dadb6bd1" />
+
+7. By viewing the page source of the avatar form, we see the avatar form field value contains the path to the image. 
+
+<img width="923" height="568" alt="image" src="https://github.com/user-attachments/assets/9a343e2d-12f5-49fb-9c90-002d4f5bc31f" />
+
+8. We can then try making the request again but changing the avatar value to private in hopes that the server will access the resource and get past the IP address block by first by right-clicking on one of the radio buttons on the avatar form and selecting Inspect:
+
+<img width="1365" height="639" alt="image" src="https://github.com/user-attachments/assets/a18d9aa3-5bf2-4af4-a1ca-96c01db38e79" />
+
+9. We then edit the value of the radio button to 'private'
+
+<img width="560" height="58" alt="image" src="https://github.com/user-attachments/assets/cdec879b-805c-47ee-bb7c-2238a3e0635e" />
+
+10. When we select the avatar we edited and then click the Update Avatar button.
+    Unfortunately, it looks like the web application has a deny list in place and has blocked access to the ```/private``` endpoint.
+
+<img width="1358" height="600" alt="image" src="https://github.com/user-attachments/assets/983befff-409d-4e83-b337-f334e52fbea8" />
+
+As we can see from the error message, the path cannot start with ```/private```. 
+
+11. We can use a directory traversal trick to bypass this rule and reach our desired endpoint. We do this by setting the avatar value to ```x/../private```.
+
+<img width="1365" height="587" alt="image" src="https://github.com/user-attachments/assets/7b065e65-3a1b-42c6-9c2f-42cec5860ff5" />
+
+Following this trick, we note that have now bypassed the rule, and the user updated the avatar.
+
+<img width="1365" height="680" alt="image" src="https://github.com/user-attachments/assets/11bc7984-63f9-45a9-9089-e1fb2d0dd783" />
+
+
+
+This trick works because when the web server receives the request for ```x/../private```, it knows that the ```../``` string means to move up a directory that now translates the request to just ```/private```.
+
+<img width="1082" height="571" alt="image" src="https://github.com/user-attachments/assets/e6e4166e-1713-4981-8a6f-b7cd026f86cc" />
+
+
+Finally, Viewing the page source of the avatar form, we see the currently set avatar now contains the contents from the ```/private``` directory in base64 encoding, decode this content and it will reveal the flag for this task.
+
+<img width="1365" height="608" alt="image" src="https://github.com/user-attachments/assets/35c7a68c-04d5-46b4-a088-e3cb9876433b" />
+
 
 
 
