@@ -261,70 +261,81 @@ Burp Sutie Proxy HTTP history showing an HTTP POST request and response.
 Now that we have seen how the system reacts to valid and invalid requests, let’s see if we can exploit a race condition. 
 1. Right-click on the POST request you want to duplicate and choose Send to Repeater.
 
+<img width="1114" height="587" alt="image" src="https://github.com/user-attachments/assets/97140bf9-e1bb-456b-bf36-ba913dd959fd" />
 
 
-
-
-
-
-
-
-Burp Sutie Proxy HTTP history showing an HTTP POST request being sent to Repeater.
+Burp Suite Proxy HTTP history showing an HTTP POST request being sent to Repeater.
 
 2. In the Repeater tab, as shown in the numbered screenshots below:
-   - Click on the + icon next to the received request tab and select Create tab group
-   - Assign a group name, and include the tab of the request you just sent to the importer before clicking Create
-Right-click on the request tab and choose Duplicate tab (If this option is not available in your version, you can press CTRL+R multiple times instead)
-As a starting point, we will duplicate it 20 times
-Next to the Send button, the arrow pointed downwards will bring a menu to decide how you want to send the duplicated requests
+   1.  Click on the + icon next to the received request tab and select Create tab group
+   2.  Assign a group name, and include the tab of the request you just sent to the importer before clicking Create
+   3.  Right-click on the request tab and choose Duplicate tab (If this option is not available in your version, you can press CTRL+R multiple times instead)
+   4.  As a starting point, we will duplicate it 20 times
+   5.  Next to the Send button, the arrow pointed downwards will bring a menu to decide how you want to send the duplicated requests
+
+<img width="1129" height="589" alt="image" src="https://github.com/user-attachments/assets/f6da004f-6f36-4747-8030-41eacd629754" />
+
 Creating a tab group in Burp Suite Repeater.
+
+<img width="1034" height="599" alt="image" src="https://github.com/user-attachments/assets/99ab1347-4118-4cab-abb4-7fd7a9a84885" />
 
 Duplicating a tab 20 times within a tab group in Burp Suite Repeater.
 
-Next, we will exploit the target application by sending the duplicated request. Using the built-in options in Burp Suite Repeater, the drop-down arrow offers the following choices:
+3. Next, we will exploit the target application by sending the duplicated request. Using the built-in options in Burp Suite Repeater, the drop-down arrow offers the following choices:
+   - Send group in sequence (single connection)
+   - Send group in sequence (separate connections)
+   - Send group in parallel
 
-Send group in sequence (single connection)
-Send group in sequence (separate connections)
-Send group in parallel
-Sending Request Group in Sequence
+### **Sending Request Group in Sequence**
+
 Sending the group in sequence provides two options:
+   - Send group in sequence (single connection)
+   - Send group in sequence (separate connections)
 
-Send group in sequence (single connection)
-Send group in sequence (separate connections)
-Send Group in Sequence over a Single Connection
+**Send Group in Sequence over a Single Connection**
 
 This option establishes a single connection to the server and sends all the requests in the group’s tabs before closing the connection. This can be useful for testing for potential client-side desync vulnerabilities.
 
-Send Group in Sequence over Separate Connections
+**Send Group in Sequence over Separate Connections**
 
 As the name suggests, this option establishes a TCP connection, sends a request from the group, and closes the TCP connection before repeating the process for the subsequent request.
 
 We tested this option to attack the web application. The screenshot below shows 21 TCP connections for the different POST requests in the group we sent.
+- The first group (labelled 1) comprises five successful requests. We could confirm that they were successful by checking the respective responses. Furthermore, we noticed that each took around 3 seconds, as indicated by the duration (labelled 3).
+- The second group (labelled 2) shows sixteen denied requests. The duration was around four milliseconds. It is interesting to check the Relative Start time as well.
 
-The first group (labelled 1) comprises five successful requests. We could confirm that they were successful by checking the respective responses. Furthermore, we noticed that each took around 3 seconds, as indicated by the duration (labelled 3).
-The second group (labelled 2) shows sixteen denied requests. The duration was around four milliseconds. It is interesting to check the Relative Start time as well.
+<img width="1359" height="371" alt="image" src="https://github.com/user-attachments/assets/0e3a471f-81d6-42d6-8fe0-ed8be7f3e816" />
+
+
 Wireshark showing 21 different POST requests; five are successful and the remaining ones are not successful.
 
 The screenshot below shows the whole TCP connection for a request. We can confirm that the POST request was sent in a single packet.
 
+
 Wireshark showing the TCP connection related to a POST request.
 
-Send Request Group in Parallel
+### **Send Request Group in Parallel**
+
 Choosing to send the group’s requests in parallel would trigger the Repeater to send all the requests in the group at once. In this case, we notice the following, as shown in the screenshot below:
 
-In the Relative Start column, we notice that all 21 packets were sent within a window of 0.5 milliseconds (labelled 1).
-All 21 requests were successful; they resulted in a successful credit transfer. Each request took around 3.2 seconds to complete (labelled 2).
+- In the Relative Start column, we notice that all 21 packets were sent within a window of 0.5 milliseconds (labelled 1).
+- All 21 requests were successful; they resulted in a successful credit transfer. Each request took around 3.2 seconds to complete (labelled 2).
+
+<img width="1321" height="355" alt="image" src="https://github.com/user-attachments/assets/0d5f4671-6661-4572-9074-4effafa2f1eb" />
 Wireshark showing 21 requests sent in parallel and at the same time.
 
 By paying close attention to the screenshot above, we notice that each request led to 12 packets; however, in the previous attempt (send in sequence), we see that each request required only 10 packets. Why did this happen?
 
-According to Sending Grouped HTTP Requests(opens in new tab) documentation, when sending in parallel, Repeater implements different techniques to synchronize the requests’ arrival at the target, i.e., they arrive within a short time frame. The synchronization technique depends on the HTTP protocol being used:
+According to [Sending Grouped HTTP Requests](https://portswigger.net/burp/documentation/desktop/tools/repeater/send-group) documentation, when sending in parallel, Repeater implements different techniques to synchronize the requests’ arrival at the target, i.e., they arrive within a short time frame. The synchronization technique depends on the HTTP protocol being used:
+- In the case of ```HTTP/2+,``` the Repeater tries to send the whole group in a single packet. In other words, a single TCP packet would carry multiple requests.
+- In the case of ```HTTP/1,``` the Repeater resorts to last-byte synchronization. This trick is achieved by withholding the last byte from each request. Only once all packets are sent without the last-byte are the last-byte of all the requests sent. The screenshot below shows our POST request sent over two packets.
 
-In the case of HTTP/2+, the Repeater tries to send the whole group in a single packet. In other words, a single TCP packet would carry multiple requests.
-In the case of HTTP/1, the Repeater resorts to last-byte synchronization. This trick is achieved by withholding the last byte from each request. Only once all packets are sent without the last-byte are the last-byte of all the requests sent. The screenshot below shows our POST request sent over two packets.
+
+
+
 Wireshark showing the TCP connection related to a POST request when using last-byte synchronization.
 
-Answer the questions below
+
 
 ---
 
