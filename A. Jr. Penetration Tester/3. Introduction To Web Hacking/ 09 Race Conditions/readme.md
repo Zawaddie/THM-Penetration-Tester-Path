@@ -332,6 +332,7 @@ According to [Sending Grouped HTTP Requests](https://portswigger.net/burp/docume
 
 
 
+<img width="1356" height="292" alt="image" src="https://github.com/user-attachments/assets/aa17b1a8-05af-48ed-b073-9b3254f6b589" />
 
 Wireshark showing the TCP connection related to a POST request when using last-byte synchronization.
 
