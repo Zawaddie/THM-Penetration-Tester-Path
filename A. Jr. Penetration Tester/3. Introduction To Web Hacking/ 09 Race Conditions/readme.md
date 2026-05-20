@@ -235,7 +235,7 @@ How can we get our duplicated requests to reach the server within this short win
 
 TARGET: http://MACHINE_IP:8080. A web application belonging to a mobile operator and allows phone credit transfer.
 
-These are the credentials for two users:
+Credentials for two users:
 1. User1: 07799991337  Password: pass1234
 2. User2: 07113371111  Password: pass1234
 
@@ -247,8 +247,22 @@ First, we need to explore and study how the target web application receives HTTP
 3. We log in to either of the accounts and click the Pay & Recharge button.
 4. We then make a credit transfer: we click the Transfer button and enter the mobile number of the other account along with the amount you want to transfer. You can try to transfer an amount that exceeds your current balance and a small amount, such as $1, to see how the system responds in each case.
 
+**SUMMARY: Steps to Exploit the Race Condition**
+
+1. Capture the Valid Transfer Request: Log in to one of the accounts and initiate a credit transfer. Capture the POST request in Burp Suite.
+
+2. Send to Repeater: Right-click on the POST request in the HTTP history and select 'Send to Repeater'.
+
+3. Create Tab Group: In Repeater, create a tab group for your request. Duplicate this request multiple times (at least 20).
+
+4. Select Parallel Sending: Make sure to select 'Send group in parallel' from the drop-down menu next to the Send button. This is crucial for triggering the race condition effectively.
+
+5. Adjust the Amount: Ensure the transfer amount is set to a value that, when combined with multiple requests, exceeds the $100 threshold.
+
+6. Send the Requests: Execute the parallel requests and monitor the responses. The goal is to have all requests processed successfully, pushing your balance over the limit.
 
 ### Burp Suite: Repeater
+
 In the image below, we can see:
 - A POST request
 - The details show the target phone number and a transfer amount of $1.5
@@ -292,11 +306,11 @@ Sending the group in sequence provides two options:
    - Send group in sequence (single connection)
    - Send group in sequence (separate connections)
 
-**Send Group in Sequence over a Single Connection**
+1. **Send Group in Sequence over a Single Connection**
 
 This option establishes a single connection to the server and sends all the requests in the group’s tabs before closing the connection. This can be useful for testing for potential client-side desync vulnerabilities.
 
-**Send Group in Sequence over Separate Connections**
+2. **Send Group in Sequence over Separate Connections**
 
 As the name suggests, this option establishes a TCP connection, sends a request from the group, and closes the TCP connection before repeating the process for the subsequent request.
 
@@ -309,14 +323,16 @@ We tested this option to attack the web application. The screenshot below shows 
 
 Wireshark showing 21 different POST requests; five are successful and the remaining ones are not successful.
 
-The screenshot below shows the whole TCP connection for a request. We can confirm that the POST request was sent in a single packet.
+We can confirm that the POST request was sent in a single packet.
+
+<img width="1357" height="292" alt="image" src="https://github.com/user-attachments/assets/29dd9993-1896-4b4f-bca7-f398bd93177e" />
 
 
 Wireshark showing the TCP connection related to a POST request.
 
 ### **Send Request Group in Parallel**
 
-Choosing to send the group’s requests in parallel would trigger the Repeater to send all the requests in the group at once. In this case, we notice the following, as shown in the screenshot below:
+Choosing to send the group’s requests in parallel would trigger the Repeater to send all the requests in the group at once. In this case, we notice the following:
 
 - In the Relative Start column, we notice that all 21 packets were sent within a window of 0.5 milliseconds (labelled 1).
 - All 21 requests were successful; they resulted in a successful credit transfer. Each request took around 3.2 seconds to complete (labelled 2).
@@ -324,136 +340,69 @@ Choosing to send the group’s requests in parallel would trigger the Repeater t
 <img width="1321" height="355" alt="image" src="https://github.com/user-attachments/assets/0d5f4671-6661-4572-9074-4effafa2f1eb" />
 Wireshark showing 21 requests sent in parallel and at the same time.
 
-By paying close attention to the screenshot above, we notice that each request led to 12 packets; however, in the previous attempt (send in sequence), we see that each request required only 10 packets. Why did this happen?
+Keenly, we notice that each request led to 12 packets; however, in the previous attempt (send in sequence), we see that each request required only 10 packets. 
 
 According to [Sending Grouped HTTP Requests](https://portswigger.net/burp/documentation/desktop/tools/repeater/send-group) documentation, when sending in parallel, Repeater implements different techniques to synchronize the requests’ arrival at the target, i.e., they arrive within a short time frame. The synchronization technique depends on the HTTP protocol being used:
 - In the case of ```HTTP/2+,``` the Repeater tries to send the whole group in a single packet. In other words, a single TCP packet would carry multiple requests.
-- In the case of ```HTTP/1,``` the Repeater resorts to last-byte synchronization. This trick is achieved by withholding the last byte from each request. Only once all packets are sent without the last-byte are the last-byte of all the requests sent. The screenshot below shows our POST request sent over two packets.
+- In the case of ```HTTP/1,``` the Repeater resorts to last-byte synchronization. This trick is achieved by withholding the last byte from each request. Only once all packets are sent without the last-byte are the last-byte of all the requests sent. 
 
 
 
 <img width="1356" height="292" alt="image" src="https://github.com/user-attachments/assets/aa17b1a8-05af-48ed-b073-9b3254f6b589" />
 
 Wireshark showing the TCP connection related to a POST request when using last-byte synchronization.
-
-
-
----
-
-
-
-### **Send Request Group in Parallel**
-
-Choosing to send the group’s requests in parallel would trigger the Repeater to send all the requests in the group at once. In this case, we notice the following, as shown in the screenshot below:
-
-- In the Relative Start column, we notice that all 21 packets were sent within a window of 0.5 milliseconds (labelled 1).
-- All 21 requests were successful; they resulted in a successful credit transfer. Each request took around 3.2 seconds to complete (labelled 2).
-
-<img width="1321" height="355" alt="image" src="https://github.com/user-attachments/assets/0d5f4671-6661-4572-9074-4effafa2f1eb" />
-Wireshark showing 21 requests sent in parallel and at the same time.
-
-By paying close attention to the screenshot above, we notice that each request led to 12 packets; however, in the previous attempt (send in sequence), we see that each request required only 10 packets. Why did this happen?
-
-According to [Sending Grouped HTTP Requests](https://portswigger.net/burp/documentation/desktop/tools/repeater/send-group) documentation, when sending in parallel, Repeater implements different techniques to synchronize the requests’ arrival at the target, i.e., they arrive within a short time frame. The synchronization technique depends on the HTTP protocol being used:
-- In the case of ```HTTP/2+,``` the Repeater tries to send the whole group in a single packet. In other words, a single TCP packet would carry multiple requests.
-- In the case of ```HTTP/1,``` the Repeater resorts to last-byte synchronization. This trick is achieved by withholding the last byte from each request. Only once all packets are sent without the last-byte are the last-byte of all the requests sent. The screenshot below shows our POST request sent over two packets.
-
-
-
-<img width="1356" height="292" alt="image" src="https://github.com/user-attachments/assets/aa17b1a8-05af-48ed-b073-9b3254f6b589" />
-
-Wireshark showing the TCP connection related to a POST request when using last-byte synchronization.
-
 
 ---
 
 ###  Practical
 
-Steps to Follow
-Start the AttackBox and Access the Bank App: Open Burp's built-in browser and navigate to http://MACHINE_IP:5000 to access the bank application.
+**Steps to Follow**
 
-Log In to an Account: Use one of the provided credentials to log in. For example:
+1. Start the AttackBox and Access the Bank App: Open Burp's built-in browser and navigate to http://MACHINE_IP:5000 to access the bank application.
 
+2. Log In to an Account: Use one of the provided credentials to log in. 
 
-
-
-Understanding the Exploit
-To successfully exploit the race condition, you need to send multiple transfer requests simultaneously. This is crucial for exceeding your account balance.
-
-Steps to Follow:
-Capture a Valid POST Request: Start by logging into one of the accounts and performing a simple transfer. Capture this request in Burp Suite.
-Send to Repeater: Right-click the POST request and select 'Send to Repeater'. Open the Repeater tab.
-Create a Tab Group: Click on the '+' icon next to the request tab, select 'Create tab group', and name it appropriately.
-Duplicate the Request: Duplicate your request 20 times or more to create multiple instances of the transfer request.
-Select Parallel Send: Ensure you choose the option to 'Send group in parallel'. This method allows all requests to be sent at once, maximizing the chances of exceeding your balance.
-Monitor the Responses: After sending the requests, check the responses carefully to con
+3. Understanding the Exploit: To successfully exploit the race condition, you need to send multiple transfer requests simultaneously. This is crucial for exceeding your account balance.
 
 
+4. Capture a Valid POST Request: Start by logging into one of the accounts and performing a simple transfer. Capture this request in Burp Suite.
 
-Steps to Exploit the Race Condition
-Capture the Valid Transfer Request: Log in to one of the accounts and initiate a credit transfer. Capture the POST request in Burp Suite.
+5. Send to Repeater: Right-click the POST request and select 'Send to Repeater'. Open the Repeater tab.
 
-Send to Repeater: Right-click on the POST request in the HTTP history and select 'Send to Repeater'.
+6. Create a Tab Group: Click on the '+' icon next to the request tab, select 'Create tab group', and name it appropriately.
 
-Create Tab Group: In Repeater, create a tab group for your request. Duplicate this request multiple times (at least 20).
+7. Duplicate the Request: Duplicate your request 20 times or more to create multiple instances of the transfer request.
 
-Select Parallel Sending: Make sure to select 'Send group in parallel' from the drop-down menu next to the Send button. This is crucial for triggering the race condition effectively.
+8. Select Parallel Send: Ensure you choose the option to 'Send group in parallel'. This method allows all requests to be sent at once, maximizing the chances of exceeding your balance.
 
-Adjust the Amount: Ensure the transfer amount is set to a value that, when combined with multiple requests, exceeds the $100 threshold.
-
-Send the Requests: Execute the parallel requests and monitor the responses. The goal is to have all requests processed successfully, pushing your balance over the limit.
+9. Monitor the Responses: After sending the requests, check the responses carefully.
 
 
 
-
-
-
-
-
-
-The provided web application simulates a mobile operator credit transfer system.
-
-Credentials provided:
-
-User1 07799991337 pass1234
-
-User2 07113371111 pass1234
-
-The goal is to determine whether the credit transfer system is vulnerable to a race condition.
-
-Capturing the Request
-Using Burp Suite Proxy, we log in and perform a credit transfer.
-
-We capture the POST request responsible for transferring funds.
+**IN SUMMARY:**
 
 The request shows:
-
 - Target phone number
 - Transfer amount
 - Successful transaction response
 
-
 Sending Request to Repeater
-We send the captured POST request to Burp Suite Repeater.
+- We send the captured POST request to Burp Suite Repeater.
 
 Inside Repeater:
-
-Create a tab group
-Duplicate the request multiple times
-Prepare to send them simultaneously
-The idea is to trigger multiple transfers before the balance update occurs.
+- Create a tab group
+- Duplicate the request multiple times
+- Prepare to send them simultaneously
+- The idea is to trigger multiple transfers before the balance update occurs.
 
 Sequential Requests
-When sending requests sequentially, each request waits for the previous one to complete.
-
-Most requests fail because the balance is updated between requests.
+- When sending requests sequentially, each request waits for the previous one to complete.
+- Most requests fail because the balance is updated between requests.
 
 Parallel Requests
-To exploit the vulnerability, we send requests in parallel.
-
-Burp sends all duplicated requests within milliseconds, allowing them to pass the balance validation simultaneously.
-
-This results in multiple successful transfers even though the account lacks sufficient credit.
+- To exploit the vulnerability, we send requests in parallel.
+- Burp sends all duplicated requests within milliseconds, allowing them to pass the balance validation simultaneously.
+- This results in multiple successful transfers even though the account lacks sufficient credit.
 
 <img width="1342" height="622" alt="image" src="https://github.com/user-attachments/assets/a5b84c6f-621c-4442-a567-9239093ddf00" />
 
@@ -485,71 +434,53 @@ We will list a few mitigation techniques.
 - Database Transactions: Transactions group multiple database operations into one unit. Consequently, all operations within the transaction either succeed as a group or fail as a group. This approach ensures data consistency and prevents race conditions from multiple processes modifying the database concurrently.
 
 
+
 ---
 
 ## challenge WebApp
 
 This room introduced race conditions and various situations leading to such vulnerabilities. System complexity and geographical spread can lead to diverse unforeseen situations, including vulnerabilities related to race conditions. To discover and exploit such conditions, it is vital that we first observe how the system behaves under normal conditions and then try to find out how it behaves when we try to exploit the timing. With the currently available tools, we have plenty of techniques to try.
 
-Challenge
-Following what you have learned, it is time to attempt discovering and exploiting a race condition without guidance.
+**Challenge:** Using what learned to attempt discovering and exploiting a race condition without guidance.
 
-Click on the Start Machine button on the right to start the attached VM. Click on the Start AttackBox button at the top to start the AttackBox if you haven’t done that already. On the AttackBox, browse to http://10.49.133.129:5000.
+ **Target88:** http://10.49.133.129:5000, a web application belonging to a bank and allows clients to transfer online money. 
+ 
+ **Required:** Get one of the accounts to amass more than $1000.
 
-These are the credentials for the three users:
+Credentials for the three users:
 
-Name: Rasser Cond
+```
+Name: Rasser Cond Username: 4621 Password: blueApple
 
-Username: 4621
-Password: blueApple
-Name: Zavodni Stav
+Name: Zavodni Stav Username: 6282 Password: whiteHorse
 
-Username: 6282
-Password: whiteHorse
-Name: Warunki Wyscigu
+Name: Warunki Wyscigu Username: 9317 Password: greenOrange
+```
 
-Username: 9317
-Password: greenOrange
-This web application belongs to a bank and allows clients to transfer online money. You need to get one of the accounts to amass more than $1000.
-
-
-
-Important Notes
-If your requests are failing, double-che
-User profile photo.
-Echo
-Smart suggestion
 Steps to Exploit the Race Condition:
-Start Your Environment: Ensure the AttackBox is running and navigate to http://MACHINE_IP:5000.
+1. Start Your Environment: Ensure the AttackBox is running and navigate to http://MACHINE_IP:5000.
 
-Log in to an Account: Use the credentials provided to log into one of the accounts. For example, use:
+2. Log in to an Account: Use the credentials provided to log into one of the accounts. For example, use:
 
+```
 Username: 4621
 Password: blueApple
-Perform a Transfer: Initiate a small transfer to understand how the transfer request is structured. Monitor this request using Burp Suite.
+```
 
-Capture the Transfer Request: Locate the HTTP POST request for the transfer action in Burp's HTTP history and send it to Repeater.
+3. Perform a Transfer: Initiate a small transfer to understand how the transfer request is structured. Monitor this request using Burp Suite.
 
-Duplicate the Request: Create a tab group in Repeater and duplicate the transfer request multiple times (e.g., 20 or more).
 
-Send Group in Parallel: Select the option to send the group in parallel to trigger multiple requests simultaneously. This is critical to take advantage of the timing vulnerability.
 
-Adjust Amounts and Counts: Experiment with different transfer amounts and the nu
+4. Capture the Transfer Request: After logging in, initiate a transfer with a valid amount (e.g., $1) and send this POST request to Burp Repeater.
 
-User profile photo.
-Echo
-Smart suggestion
-Steps to Exploit the Race Condition
-Capture the Transfer Request: After logging in, initiate a transfer with a valid amount (e.g., $1) and send this POST request to Burp Repeater.
+5. Duplicate the Request: In the Repeater tab, create a tab group for this request and duplicate it multiple times (at least 20).
 
-Duplicate the Request: In the Repeater tab, create a tab group for this request and duplicate it multiple times (at least 20).
-
-Choose Parallel Sending: When ready to send the group, select the option to 'Send group in parallel'. This is crucial as it will allow all requests to be sent simultaneously, which is necessary to exploit the race condition.
+6. Choose Parallel Sending: When ready to send the group, select the option to 'Send group in parallel'. This is crucial as it will allow all requests to be sent simultaneously, which is necessary to exploit the race condition.
 
 Tip: Make sure you have the most recent session/CSRF tokens in each duplicated request to prevent the server from rejecting them.
 Adjust Amounts: Experiment with the amounts in the POST request to find the right balance that allows you to exceed $100 in total credit. Start with a basic amount like $1 and increase if needed.
 
-Monitor Responses: After sending, check the responses to confirm whether the
+7. Monitor Responses: After sending, check the responses to confirm whether the
 
 
 ### Exploitation Steps
