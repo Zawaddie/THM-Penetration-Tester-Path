@@ -342,6 +342,258 @@ Wireshark showing the TCP connection related to a POST request when using last-b
 
 
 
+### **Send Request Group in Parallel**
+
+Choosing to send the group’s requests in parallel would trigger the Repeater to send all the requests in the group at once. In this case, we notice the following, as shown in the screenshot below:
+
+- In the Relative Start column, we notice that all 21 packets were sent within a window of 0.5 milliseconds (labelled 1).
+- All 21 requests were successful; they resulted in a successful credit transfer. Each request took around 3.2 seconds to complete (labelled 2).
+
+<img width="1321" height="355" alt="image" src="https://github.com/user-attachments/assets/0d5f4671-6661-4572-9074-4effafa2f1eb" />
+Wireshark showing 21 requests sent in parallel and at the same time.
+
+By paying close attention to the screenshot above, we notice that each request led to 12 packets; however, in the previous attempt (send in sequence), we see that each request required only 10 packets. Why did this happen?
+
+According to [Sending Grouped HTTP Requests](https://portswigger.net/burp/documentation/desktop/tools/repeater/send-group) documentation, when sending in parallel, Repeater implements different techniques to synchronize the requests’ arrival at the target, i.e., they arrive within a short time frame. The synchronization technique depends on the HTTP protocol being used:
+- In the case of ```HTTP/2+,``` the Repeater tries to send the whole group in a single packet. In other words, a single TCP packet would carry multiple requests.
+- In the case of ```HTTP/1,``` the Repeater resorts to last-byte synchronization. This trick is achieved by withholding the last byte from each request. Only once all packets are sent without the last-byte are the last-byte of all the requests sent. The screenshot below shows our POST request sent over two packets.
+
+
+
+<img width="1356" height="292" alt="image" src="https://github.com/user-attachments/assets/aa17b1a8-05af-48ed-b073-9b3254f6b589" />
+
+Wireshark showing the TCP connection related to a POST request when using last-byte synchronization.
+
+
+---
+
+###  Practical
+
+Steps to Follow
+Start the AttackBox and Access the Bank App: Open Burp's built-in browser and navigate to http://MACHINE_IP:5000 to access the bank application.
+
+Log In to an Account: Use one of the provided credentials to log in. For example:
+
+
+
+
+Understanding the Exploit
+To successfully exploit the race condition, you need to send multiple transfer requests simultaneously. This is crucial for exceeding your account balance.
+
+Steps to Follow:
+Capture a Valid POST Request: Start by logging into one of the accounts and performing a simple transfer. Capture this request in Burp Suite.
+Send to Repeater: Right-click the POST request and select 'Send to Repeater'. Open the Repeater tab.
+Create a Tab Group: Click on the '+' icon next to the request tab, select 'Create tab group', and name it appropriately.
+Duplicate the Request: Duplicate your request 20 times or more to create multiple instances of the transfer request.
+Select Parallel Send: Ensure you choose the option to 'Send group in parallel'. This method allows all requests to be sent at once, maximizing the chances of exceeding your balance.
+Monitor the Responses: After sending the requests, check the responses carefully to con
+
+
+
+Steps to Exploit the Race Condition
+Capture the Valid Transfer Request: Log in to one of the accounts and initiate a credit transfer. Capture the POST request in Burp Suite.
+
+Send to Repeater: Right-click on the POST request in the HTTP history and select 'Send to Repeater'.
+
+Create Tab Group: In Repeater, create a tab group for your request. Duplicate this request multiple times (at least 20).
+
+Select Parallel Sending: Make sure to select 'Send group in parallel' from the drop-down menu next to the Send button. This is crucial for triggering the race condition effectively.
+
+Adjust the Amount: Ensure the transfer amount is set to a value that, when combined with multiple requests, exceeds the $100 threshold.
+
+Send the Requests: Execute the parallel requests and monitor the responses. The goal is to have all requests processed successfully, pushing your balance over the limit.
+
+
+
+
+
+
+
+
+
+The provided web application simulates a mobile operator credit transfer system.
+
+Credentials provided:
+
+User1 07799991337 pass1234
+
+User2 07113371111 pass1234
+
+The goal is to determine whether the credit transfer system is vulnerable to a race condition.
+
+Capturing the Request
+Using Burp Suite Proxy, we log in and perform a credit transfer.
+
+We capture the POST request responsible for transferring funds.
+
+The request shows:
+
+- Target phone number
+- Transfer amount
+- Successful transaction response
+
+
+Sending Request to Repeater
+We send the captured POST request to Burp Suite Repeater.
+
+Inside Repeater:
+
+Create a tab group
+Duplicate the request multiple times
+Prepare to send them simultaneously
+The idea is to trigger multiple transfers before the balance update occurs.
+
+Sequential Requests
+When sending requests sequentially, each request waits for the previous one to complete.
+
+Most requests fail because the balance is updated between requests.
+
+Parallel Requests
+To exploit the vulnerability, we send requests in parallel.
+
+Burp sends all duplicated requests within milliseconds, allowing them to pass the balance validation simultaneously.
+
+This results in multiple successful transfers even though the account lacks sufficient credit.
+
+<img width="1342" height="622" alt="image" src="https://github.com/user-attachments/assets/a5b84c6f-621c-4442-a567-9239093ddf00" />
+
+<img width="1348" height="597" alt="image" src="https://github.com/user-attachments/assets/847a2ad1-4367-4cde-adbb-76adcc9f39dc" />
+
+The reason this works is because the application checks the balance before the deduction occurs. When multiple requests arrive simultaneously, each sees the original balance.
+
+Eventually, this allows us to accumulate more than $100 credit and gives the flag.
+
+
+---
+
+## Detection and Mitigation
+
+### Detection
+
+Detecting race conditions from the business owner’s perspective can be challenging. If a few users redeemed the same gift card multiple times, it would most likely go unnoticed unless the logs are actively checked for certain behaviours. Considering that race conditions can be used to exploit even more subtle vulnerabilities, it is clear that we need the help of penetration testers and bug bounty hunters to try to discover such vulnerabilities and report their findings.
+
+Penetration testers must understand how the system behaves under normal conditions when enforced controls are enforced. The controls can be: use once, vote once, rate once, limit to balance, and limit to one every 5 minutes, among others. The next step would be to try to circumvent this limit by exploiting race conditions. Figuring out the different system’s states can help us make educated guesses about time windows where a race condition can be exploited. Tools such as Burp Suite Repeater can be a great starting point.
+
+### Mitigation
+
+We will list a few mitigation techniques.
+
+- Synchronization Mechanisms: Modern programming languages provide synchronization mechanisms like locks. Only one thread can acquire the lock at a time, preventing others from accessing the shared resource until it’s released.
+
+- Atomic Operations: Atomic operations refer to indivisible execution units, a set of instructions grouped together and executed without interruption. This approach guarantees that an operation can finish without being interrupted by another thread.
+
+- Database Transactions: Transactions group multiple database operations into one unit. Consequently, all operations within the transaction either succeed as a group or fail as a group. This approach ensures data consistency and prevents race conditions from multiple processes modifying the database concurrently.
+
+
+---
+
+## challenge WebApp
+
+This room introduced race conditions and various situations leading to such vulnerabilities. System complexity and geographical spread can lead to diverse unforeseen situations, including vulnerabilities related to race conditions. To discover and exploit such conditions, it is vital that we first observe how the system behaves under normal conditions and then try to find out how it behaves when we try to exploit the timing. With the currently available tools, we have plenty of techniques to try.
+
+Challenge
+Following what you have learned, it is time to attempt discovering and exploiting a race condition without guidance.
+
+Click on the Start Machine button on the right to start the attached VM. Click on the Start AttackBox button at the top to start the AttackBox if you haven’t done that already. On the AttackBox, browse to http://10.49.133.129:5000.
+
+These are the credentials for the three users:
+
+Name: Rasser Cond
+
+Username: 4621
+Password: blueApple
+Name: Zavodni Stav
+
+Username: 6282
+Password: whiteHorse
+Name: Warunki Wyscigu
+
+Username: 9317
+Password: greenOrange
+This web application belongs to a bank and allows clients to transfer online money. You need to get one of the accounts to amass more than $1000.
+
+
+
+Important Notes
+If your requests are failing, double-che
+User profile photo.
+Echo
+Smart suggestion
+Steps to Exploit the Race Condition:
+Start Your Environment: Ensure the AttackBox is running and navigate to http://MACHINE_IP:5000.
+
+Log in to an Account: Use the credentials provided to log into one of the accounts. For example, use:
+
+Username: 4621
+Password: blueApple
+Perform a Transfer: Initiate a small transfer to understand how the transfer request is structured. Monitor this request using Burp Suite.
+
+Capture the Transfer Request: Locate the HTTP POST request for the transfer action in Burp's HTTP history and send it to Repeater.
+
+Duplicate the Request: Create a tab group in Repeater and duplicate the transfer request multiple times (e.g., 20 or more).
+
+Send Group in Parallel: Select the option to send the group in parallel to trigger multiple requests simultaneously. This is critical to take advantage of the timing vulnerability.
+
+Adjust Amounts and Counts: Experiment with different transfer amounts and the nu
+
+User profile photo.
+Echo
+Smart suggestion
+Steps to Exploit the Race Condition
+Capture the Transfer Request: After logging in, initiate a transfer with a valid amount (e.g., $1) and send this POST request to Burp Repeater.
+
+Duplicate the Request: In the Repeater tab, create a tab group for this request and duplicate it multiple times (at least 20).
+
+Choose Parallel Sending: When ready to send the group, select the option to 'Send group in parallel'. This is crucial as it will allow all requests to be sent simultaneously, which is necessary to exploit the race condition.
+
+Tip: Make sure you have the most recent session/CSRF tokens in each duplicated request to prevent the server from rejecting them.
+Adjust Amounts: Experiment with the amounts in the POST request to find the right balance that allows you to exceed $100 in total credit. Start with a basic amount like $1 and increase if needed.
+
+Monitor Responses: After sending, check the responses to confirm whether the
+
+
+### Exploitation Steps
+
+Login using Rasser Cond.
+
+```
+Rasser Cond Username: 4621 Password: blueAppl
+```
+
+<img width="1268" height="473" alt="image" src="https://github.com/user-attachments/assets/70cde0ed-ba22-4880-af38-80d0d60c4ce9" />
+
+
+
+Transfer 49 to Zavodni and capture the POST request.
+
+<img width="1365" height="595" alt="image" src="https://github.com/user-attachments/assets/aa2b0e57-2161-483e-bc9b-13bb8729586d" />
+
+<img width="1362" height="601" alt="image" src="https://github.com/user-attachments/assets/beeed127-5ea1-4c54-bf8d-bf09f56e5e48" />
+
+
+Send the request to Burp Repeater, duplicate the request multiple times, and send the group in parallel.
+
+<img width="1359" height="595" alt="image" src="https://github.com/user-attachments/assets/1a4bf50e-ca88-4fb4-826f-71dcb3920f05" />
+
+By exploiting the race condition, multiple transfers execute simultaneously before the balance is updated.
+
+<img width="1362" height="590" alt="image" src="https://github.com/user-attachments/assets/29913d03-fe7f-4ef5-b50b-ef4a77a79ffa" />
+
+This allows the account balance to exceed $1000 and gives the flag.
+
+---
+
+##
+Conclusion
+Race conditions demonstrate how timing flaws in application logic can undermine security controls. Even when proper validations exist, a small execution window can allow attackers to bypass restrictions and manipulate system state.
+
+By understanding threads, processes, and state transitions, security researchers can identify these vulnerabilities and exploit them effectively during penetration testing.
+
+Tools like Burp Suite Repeater provide practical mechanisms to test concurrent requests and reveal race condition vulnerabilities in real-world applications.
+
+
+---
+
 
 
 
