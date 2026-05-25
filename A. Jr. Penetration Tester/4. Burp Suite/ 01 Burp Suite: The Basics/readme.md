@@ -41,6 +41,15 @@ Although Burp Suite Community offers a more limited feature set compared to the 
 
 ---
 
+## Notes
+
+**Target Tab:** offers features beyond scoping, allowing us to map out web applications, fine-tune our target scope, and access a comprehensive list of web vulnerabilities for reference purposes. Subtabs include **Site map, Issue definitions, Scope settings**
+
+In addition to modifying our regular web browser to work with the proxy, Burp Suite also includes a built-in Chromium browser that is pre-configured to use the proxy without any of the modifications we just had to do.
+
+We can restrict Burp Suite to target only the specific web application(s) we want to test through **Targeting and Scoping**
+
+---
 
 
 
