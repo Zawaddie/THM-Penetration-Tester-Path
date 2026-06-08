@@ -84,23 +84,28 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 ===================================================
 
 => Vulnerability Knowledge
-01.Understanding Vulnerability Databases
+
+01. Understanding Vulnerability Databases
 02. Vulnerability Scanning Tools
 03. Basic Vulnerability Identification Techniques
-04.Tomcat: CVE-2024-50379
-05.n8n: CVE-2025-68613
+04. Tomcat: CVE-2024-50379
+05. n8n: CVE-2025-68613
 06. AD: BadSuccessor
-07.CVE-2026-46300:Fragnesia
+07. CVE-2026-46300:Fragnesia
 08. CVE-2026-42945: Nginx Rift
 
 ===================================================
+
 => OWASP Top 10 (2025)
+
 01. OWASP TOP 10 2025: IAAA Failures
 02. OWASP TOP 10 2025: Application Design Flaws
 03. OWASP TOP 10 2025: Insecure Data Handling
 
 ===================================================
+
 => Password Attacks
+
 01. Phishing Basics
 02. Hydra
 03. Introduction to Wordlists
@@ -108,7 +113,9 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 05. Checkmate
 
 ====================================================
+
 => Metasploit and Exploitation
+
 01. Metasploit: The Basics
 02. Metasploit: Scanning and Exploitation
 03. Metasploit: Post-Exploitation
@@ -120,6 +127,7 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 ======================================================
 
 => Privilege Escalation 2
+
 01. Host -Server Configuration Reviews
 02. Linux Privilege Escalation: Enumeration
 03. Linux Privilege Escalation: Basics
@@ -131,18 +139,21 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 =======================================================
 
 => Active Directory Security Testing Basics
+
 01. Active Directory Basics
 02. Intro to AD Authentication
 03. Intro to AD Breaching
 04. AD: Basic Enumeration
 05. AD: Authenticated Enumeration
-07. Intro to credential Harvesting
-08. Intro to AD Lateral Movement
-09. Proxy
-10. Forward
+06. Intro to credential Harvesting
+07. Intro to AD Lateral Movement
+08. Proxy
+09. Forward
 
 ==========================================================
+
 => Specialized Domains
+
 01. Wireless Security 
 02. Mobile Application Security
 03. Cloud Security Fundamentals
@@ -153,6 +164,7 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 ===========================================================
 
 => Python Scripting Basics
+
 01. Python: Simple Demo
 02. Python: Core Concepts
 03. Building Scripts
@@ -161,6 +173,7 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 ============================================================
 
 => Pentesting Methodologies and Reporting
+
 01. Threat Modeling for Pentesters
 02. Planning and Scoping
 03. Writing Pentest Reports
@@ -169,6 +182,7 @@ Upon completing this path am looking forwad to gaining practical skills necessar
 =============================================================
 
 => Jr Pentester Challenges
+
 01. Domino
 02. Silent Monitor
 03. Dead Drop
