@@ -271,7 +271,7 @@ You deliver the findings in a structured report with two audiences in mind.
 - The executive summary communicates business risk in plain language for MedGuard's leadership: patient data was accessible, regulatory exposure under HIPAA is significant, and remediation is urgent.
 - The technical report provides the details that MedGuard's IT team needs to reproduce and fix each finding: exact exploitation steps, affected hosts, evidence screenshots, and prioritized remediation guidance.
 
-**Notes:**
+**Summary:**
 
 PTES's greatest strength is its practical, end-to-end structure. It reads like a playbook for how engagements actually unfold, which makes it an excellent learning framework for junior testers building their workflow instincts. Its detailed treatment of pre-engagement interactions is particularly valuable; many frameworks gloss over scoping and legal authorization, which are precisely the areas where inexperienced testers make costly mistakes.
 
@@ -338,7 +338,7 @@ You compile findings into a structured report, prioritized by business impact. T
 
 Cleanup involves removing any test artifacts, revoking any temporary accounts created during testing, and confirming with TechBridge's team that no testing residue remains in their environment.
 
-**NOTE:**
+**Summary:**
 
 ISSAF's nine-step model is its lasting contribution. 
 
@@ -352,8 +352,169 @@ ISSAF should be studied for its methodology and adversarial logic, not for its t
 
 ## MITRE ATT&CK
 
+Frameworks like PTES and OSSTMM structure your testing process, but they do not systematically catalog the specific tactics and techniques that real-world adversaries use. This is the gap that MITRE ATT&CK fills.
 
-**scenario to walk through the seven phases :**
+- ATT&CK stands for **Adversarial Tactics, Techniques, and Common Knowledge.**
+- Developed and maintained by [MITRE Corporation](https://attack.mitre.org/).
+- It is not a traditional penetration testing framework.
+- It is a knowledge base of adversary behavior, built from real-world observations of how threat actors operate.
+- It catalogs what attackers do, organized in a structure that security professionals can use for threat intelligence, detection engineering, red teaming, and enriching penetration test findings.
+
+### The Matrix: Tactics, Techniques, and Sub-Techniques
+
+ATT&CK is organized as a matrix. Think of it as a large table. The columns represent tactics, which are the adversary's high-level objectives, the why behind an action. 
+
+The current Enterprise matrix includes 14 tactics, progressing from **initial access through execution, persistence, privilege escalation, defense evasion, credential access, discovery, lateral movement, collection, command and control, exfiltration, and impact.**
+
+Within each tactic column, the rows list techniques, which are the how, the specific methods an adversary uses to achieve that tactical objective. 
+
+For example, under the Initial Access tactic, you will find techniques like: 
+- Phishing ```(T1566)```
+- Exploit Public-Facing Application ```(T1190)```
+- Valid Accounts ```(T1078)```
+
+Many techniques are further broken down into sub-techniques. Phishing, for instance, has sub-techniques for:
+- spearphishing attachments ```(T1566.001)```
+- spearphishing links ```(T1566.002)```
+- spearphishing via service ```(T1566.003)```
+
+Each technique entry in the ATT&CK knowledge base includes: 
+- a description,
+- real-world examples of threat groups that have used it,
+- detection recommendations, and
+- mitigations.
+
+This is what makes ATT&CK more than a taxonomy; it is a living reference tied to observed adversary behavior.
+
+### ATT&CK as a Complement, Not a Replacement
+
+ATT&CK does not tell us how to run a penetration test. It does not define phases, scoping procedures, or reporting formats. Instead, it provides a common language for describing what you found during a test conducted using any framework.
+
+ATT&CK provides standardized terminology for naming and categorizing what the we observe in a penetratio test. 
+
+We need both a framework to tell us how to run a pentest and one to give us a common language or describing our findings: Both serve different purposes.
+
+### Walkthrough: Mapping Findings to ATT&CK
+We consider the MedGuard Health engagement from PTES task. 
+
+Here is how the key findings from that engagement map to ATT&CK technique IDs:
+
+<img width="1247" height="398" alt="image" src="https://github.com/user-attachments/assets/302f69b0-2eed-4487-bd8b-65b3919dae36" />
+
+
+
+**Summary**
+
+ATT&CK's strength lies in its role as a universal translator of adversary behavior. 
+
+It enables penetration testers, threat intelligence analysts, detection engineers, and incident responders to speak the same language. 
+
+For penetration testers specifically, mapping findings to ATT&CK elevates a report from a list of vulnerabilities to a narrative grounded in real-world threat behavior.
+
+The knowledge base is extensive, and mastering it takes time. The Enterprise matrix alone contains over 200 techniques. 
+
+
+--- 
+
+## Other notable Frameworks
+
+OSSTMM, OWASP WSTG, NIST SP 800-115, PTES, ISSAF, and MITRE ATT&CK, represent the core methodologies and knowledge bases a junior penetration tester is most likely to encounter. But the landscape does not end there. Depending on the industry, platform, or regulatory environment our client operates in, we may need to be aware of more specialized frameworks that address specific domains.
+
+### Five additional Frameworks. 
+
+
+11. **WASC Threat Classification**
+
+[WASC Threat Classification](http://projects.webappsec.org/w/page/13246978/Threat%20Classification) was developed by the **Web Application Security Consortium (WASC)** as a taxonomy for categorizing web application vulnerabilities and attack types. It organizes threats into categories such as insufficient authentication, information leakage, and abuse of functionality. 
+
+While it was influential in the mid-2000s and helped standardize how the industry discussed web threats, it has since been largely superseded by the OWASP Top Ten and WSTG as the dominant web security references. May be seen encountered to be referenced in older documentation or compliance frameworks.
+
+2. **CSA Cloud Controls Matrix(CCM)**
+
+[CSA Cloud Controls Matrix(CCM)](https://www.bankofengland.co.uk/financial-stability/operational-resilience-of-the-financial-sector/cbest-threat-intelligence-led-assessments-implementation-guide) is published by the **Cloud Security Alliance (CSA)** and provides a cyber security controls framework specifically designed for cloud computing environments. 
+
+It maps controls across 17 domains, including data security, identity and access management, and infrastructure security, and aligns them with major standards like ISO 27001, NIST, and PCI DSS. CCM is not a penetration testing methodology; it is a governance and compliance tool that helps organizations assess whether their cloud providers and configurations meet security requirements. You would encounter it when a client needs a cloud security posture assessment rather than a traditional pentest.
+
+
+3. **OWASP Mobile Application Security Testing Guide (MASTG)**
+
+[OWASP Mobile Application Security Testing Guide (MASTG)](https://mas.owasp.org/MASTG/) is the mobile counterpart to the WSTG we covered in Task 3. Maintained by OWASP, the MASTG(opens in new tab) provides detailed test cases for Android and iOS application security, covering areas like data storage, cryptographic implementation, network communication, platform interaction, and code quality. 
+
+If our engagement involves testing a mobile banking app, a healthcare patient portal app, or any client-facing mobile application, the MASTG is the go-to reference. It is used alongside the **OWASP Mobile Application Security Verification Standard (MASVS)**, which defines the security requirements that the MASTG tests against.
+
+4. **PCI DSS Penetration Testing Guidelines**
+
+[PCI DSS Penetration Testing Guidelines](https://listings.pcisecuritystandards.org/documents/Penetration-Testing-Guidance-v1_1.pdf) are defined within the Payment Card Industry Data Security Standard, specifically in Requirement 11.4 (PCI DSS v4.0). Unlike the general-purpose frameworks covered earlier, these guidelines are regulatory mandates: any organization that processes, stores, or transmits cardholder data must conduct penetration tests that meet PCI DSS criteria. 
+
+The guidelines specify that tests must cover both the external perimeter and the internal network, must be conducted at least annually and after significant infrastructure changes, and must validate network segmentation controls. When your client is a retailer, payment processor, or any entity in the payment card ecosystem, PCI DSS requirements will shape both the scope and the reporting format of your engagement.
+
+5. **CBEST Framework**
+
+[CBEST Framework](https://www.bankofengland.co.uk/financial-stability/operational-resilience-of-the-financial-sector/cbest-threat-intelligence-led-assessments-implementation-guide) was developed by the **Bank of England in collaboration with the UK financial sector.** 
+
+It is a threat-intelligence-led penetration testing framework designed specifically for UK financial institutions, including banks, insurers, and financial market infrastructure providers. CBEST engagements begin with a bespoke threat intelligence phase that identifies the most relevant threat actors and attack scenarios for the specific institution, and the subsequent penetration test simulates those realistic threat scenarios. CBEST is notable for its close integration of threat intelligence with hands-on testing and for its regulatory backing within the UK financial sector.
+
+**Comparison Table**
+
+<img width="1247" height="486" alt="image" src="https://github.com/user-attachments/assets/d6b05860-006a-4675-bf11-7228608dee9d" />
+
+### Summary
+
+Framework selection is driven by context. 
+
+The client's industry, regulatory obligations, technology platform, and geographic jurisdiction all influence which framework applies. 
+- A penetration tester working with a UK bank must understand CBEST.
+- A tester assessing a mobile health app will reach for OWASP MASTG.
+- A tester working with a payment processor cannot avoid PCI DSS requirements.
+
+Knowing the landscape means you can recognize which framework a given engagement demands, even if you need to study it in detail at that point.
+
+
+--- 
+
+## Choosing the right Framework
+
+### Selection Criteria
+Four factors consistently drive framework selection in real-world engagements:
+
+1. **Engagement scope and target type is the most immediate filter.** A web application assessment aligns with the OWASP WSTG. A mobile app engagement calls for OWASP MASTG. A full-spectrum network penetration test aligns naturally with PTES or OSSTMM. If the scope spans multiple channels, including physical and human factors, OSSTMM's five-channel model becomes particularly relevant.
+
+2. **Regulatory and compliance requirements can override personal preference entirely.** If the client processes payment card data, PCI DSS penetration testing guidelines are not optional. If the client is a UK financial institution subject to Bank of England oversight, CBEST may be mandated. NIST SP 800-115 carries weight in U.S. government and federal contractor environments. When regulation dictates, the tester adapts.
+
+3. **Need for quantifiable, repeatable results** matters when multiple assessors are involved or when results must be compared across time periods. OSSTMM's RAV metrics are specifically designed for this. If a client says, "We want to measure whether our security posture has improved since last year's test," OSSTMM provides the measurement framework to objectively answer that question.
+
+4. **Team expertise and available resources** are practical constraints that are easy to overlook. A full OSSTMM implementation requires deep familiarity with its metrics system. CBEST demands threat intelligence capabilities. For a smaller team conducting a standard corporate network assessment, PTES offers a practical, well-structured workflow without the overhead of more specialized frameworks.
+
+### Scenario Practice
+Let's apply these criteria to realistic situations. For each scenario, consider which framework (or combination) you would recommend and why.
+
+**Scenario 1:**
+
+A regional hospital hires your team to test their patient-facing web portal and the internal network it connects to. The hospital must comply with HIPAA, but is not subject to PCI DSS (it outsources payment processing). They want a structured, end-to-end assessment with a clear executive summary for the board of directors.
+
+PTES is the strongest fit here. It provides the end-to-end engagement structure the hospital needs, its reporting phase explicitly produces both executive and technical deliverables, and it covers both web application and network testing within a single methodology. OWASP WSTG can supplement the web portal testing specifically, and mapping findings to MITRE ATT&CK technique IDs would strengthen the report by grounding it in real-world threat behavior.
+
+**Scenario 2:**
+
+A multinational bank headquartered in London needs a penetration test that satisfies its UK regulatory obligations. The engagement must begin with a threat intelligence assessment specific to the institution.
+
+CBEST is the clear choice. It is designed for UK financial institutions, mandates a bespoke threat intelligence phase, and is recognized by the Bank of England. No general-purpose framework alone would satisfy these requirements.
+
+**Scenario 3:**
+
+A SaaS startup wants two different security firms to independently test its platform over the next two years and compare the results directly to track improvement. The platform is entirely web-based.
+
+OSSTMM's RAV metrics enable direct cross-team, cross-time comparisons that the client is requesting. OWASP WSTG would guide the web-specific test cases, while OSSTMM provides the quantitative measurement layer that makes year-over-year comparison meaningful.
+
+**Scenario 4:**
+
+A fintech company asks you to test their Android and iOS mobile banking applications, both of which handle credit card transactions.
+
+This engagement requires two frameworks working together. OWASP MASTG provides the test cases for mobile application security on both platforms. PCI DSS penetration testing guidelines must also be followed because the applications handle cardholder data. The tester needs to satisfy both the mobile-specific testing methodology and the regulatory mandate simultaneously.
+
+**Summary**
+
+As these scenarios illustrate, framework selection is rarely a single choice. Real engagements often involve a primary framework that structures the overall methodology and supplementary frameworks that address specific regulatory, platform, or reporting requirements. The ability to recognize which frameworks apply and how they complement each other is a skill that distinguishes a methodical penetration tester from someone who simply runs tools.
 
 ---
 ## Conclusion
@@ -364,6 +525,16 @@ We have:
 - Selected an appropriate framework for a given engagement scenario.
 - Explained how MITRE ATT&CK complements traditional penetration testing methodologies.
 
+We explored:
+- OSSTMM and its scientific, metrics-driven philosophy, where security is not a subjective opinion but a measurable property expressed through Risk Assessment Values.
+- OWASP WSTG, the web application tester's roadmap, with its 90+ test cases organized across the Software Development Life Cycle.
+- NIST SP 800-115 showed us how security testing fits into the government and enterprise world, structuring assessment techniques from passive document review through active exploitation.
+- PTES brought us closest to the day-to-day reality of penetration testing, mapping seven phases from the first client call to the final report.
+- ISSAF, though no longer maintained, gave us one of the clearest models of adversarial progression through its nine-step assessment. 
+- MITRE ATT&CK provided the common vocabulary for describing what adversaries actually do, enriching findings from any framework with technique IDs grounded in real-world threat intelligence.
+- Five additional frameworks, each serving a specialized niche, from mobile application testing (OWASP MSTG) to regulatory mandates in the payment card industry (PCI DSS) and the UK financial sector (CBEST). 
+
+<img width="849" height="625" alt="image" src="https://github.com/user-attachments/assets/18661fdc-f028-4e8b-b553-accbfe6b62c2" />
 
 
 
